@@ -22,22 +22,17 @@ struct G {
 
   void dijkstra(int s) {
     dist[s] = 0;
-    // queue.insert({0, s});
-    for(int i = 0; i < adj.size(); ++i) {
-      queue.insert({dist[i], i});
-    }
+    queue.insert({0, s});
 
     while(!queue.empty()) {
       auto link = queue.begin();
       queue.erase(link);
       int u = link->second;
-      // int w = link->first;
 
       for(auto [v, w] : adj[u]) {
         if(dist[u] + w < dist[v]) {
-          queue.erase({dist[v], v});
           dist[v] = dist[u]+w;
-
+          queue.insert({dist[v], v});
         }
       }
     }
@@ -49,6 +44,7 @@ struct G {
       for(auto [v, w] : graph.adj[u]) {
         out << u << " -> " << v << " [label="<<w<<"];\n";
       }
+      out << u << "[label=\"" << u << ","<< graph.dist[u] << "\"];\n";
     }
     out << "}\n";
     return out;
@@ -157,12 +153,12 @@ int main(int argc, char const *argv[]) {
 
   g.dijkstra(S-1);
 
-  cout << "// ";
+  // cout << "// ";
   for(int i = 0; i < N; ++i) {
     cout << g.dist[i] << (i+1==N ? '\n' : ' ');
   }
 
-  cout << g << '\n';
+  // cout << g << '\n';
 
   return 0;
 }
